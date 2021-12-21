@@ -1,24 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import Map from "./components/Map";
+import Menu from "./components/Menu";
 
-function App() {
+const App = () => {
+
+  const [isPickup, setIsPickup] = useState(undefined);
+  const delivery = 'mapbox://styles/pinflag/ckwyxnhds0jtb14pi2g8ovrn8';
+  const pickUp = 'mapbox://styles/pinflag/ckvlc67tw288a14o2hja471r0';
+  
+  const handleClick = () => {
+    setIsPickup(undefined);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {isPickup === undefined ?
+        <Menu isPickup={setIsPickup}/> 
+        :
+        isPickup 
+        ?
+        <>
+        <button onClick={handleClick}>ToogleMap</button>
+        <Map url={pickUp} isPickup={setIsPickup}/>
+        </>
+        :
+        <>
+        <button onClick={handleClick}>ToogleMap</button>
+        <Map url={delivery} isPickup={setIsPickup}/>
+        </>
+      }
+  
+    </>
   );
 }
 
