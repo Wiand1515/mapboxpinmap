@@ -6,8 +6,8 @@ import Menu from "./components/Menu";
 const App = () => {
 
   const [isPickup, setIsPickup] = useState(undefined);
-  const delivery = 'mapbox://styles/pinflag/ckwyxnhds0jtb14pi2g8ovrn8';
-  const pickUp = 'mapbox://styles/pinflag/ckvlc67tw288a14o2hja471r0';
+  const deliveryUrl = 'mapbox://styles/pinflag/ckwyxnhds0jtb14pi2g8ovrn8';
+  const pickUpUrl = 'mapbox://styles/pinflag/ckvlc67tw288a14o2hja471r0';
   
   const handleClick = () => {
     setIsPickup(undefined);
@@ -22,12 +22,12 @@ const App = () => {
         ?
         <>
         <button onClick={handleClick}>ToogleMap</button>
-        <Map url={pickUp} isPickup={setIsPickup}/>
+        <Map url={pickUpUrl} isPickup={setIsPickup} pickUp={isPickup}/>
         </>
         :
         <>
         <button onClick={handleClick}>ToogleMap</button>
-        <Map url={delivery} isPickup={setIsPickup}/>
+        <Map url={deliveryUrl} isPickup={setIsPickup} pickUp={isPickup}/>
         </>
       }
   

@@ -20,15 +20,33 @@ const limitsBox = [
     -17.594722    //maxY
 ]
 
-const Map = ({url}) => {
+const Map = ({url, pickUp}) => {
 
+    //Ref to map items
     const mapContainer = useRef(null);
     const map = useRef(null);
+    //Set Longitude and Latitude
     const [longitude, setLongitude] = useState(null);
     const [latitude, setLatitude] = useState(null);
 
-
+    
+    
     useEffect(() => {
+        let marker = new mapboxgl.Marker({
+            draggable: true
+        });
+    
+        const addMarker = (e) => {
+            console.log(e.lngLat);
+            let coordinates = e.lngLat;
+            marker.setLngLat(coordinates).addTo(map.current);
+
+            marker.on('dragend', () => {
+               const lngLat = marker.getLngLat();
+               console.log(lngLat);
+            })
+        };
+
         //Initialize Map
         if (map.current) return; // initialize map only once
         map.current = new mapboxgl.Map({
@@ -37,7 +55,6 @@ const Map = ({url}) => {
             center: pinflagCoords,
             zoom: 13,
         });
-
 
         //Disable Map rotation
         map.current.dragRotate.disable();
@@ -54,63 +71,80 @@ const Map = ({url}) => {
                 showUserLocation: false,
         });
 
-        map.current.addControl(geolocate);
+        //Add Geolocation button
+        map.current.addControl(geolocate, "bottom-right");
 
         //Geolocate at load map
         map.current.on('load', () => {
             geolocate.trigger();
+
+            map.current.addSource('single-point', {
+                type: 'geojson',
+                data: {
+                    type: 'FeatureCollection',
+                    features: []
+                }
+            });
+
+            map.current.addLayer({
+                id: 'point',
+                source: 'single-point',
+                type: 'circle',
+                paint: {
+                    'circle-radius' : 5,
+                    'circle-color': '#448ee4'
+                }
+            })
         });
         
 
-        //Search User Direction
+        //Searchbar Definition
         const geocoder = new MapboxGeocoder({
             accessToken: mapboxgl.accessToken,
             mapboxgl,
             bbox: limitsBox,
             placeholder: "Ingresa tu direccion",
-            marker: {
-                color: '#11CC2C',
-                draggable: true,
-            }
-        })
+            marker: false
+        });
+
         //Add Searchbar on Map
         map.current.addControl(
             geocoder,
             "top-left",
-        )
-
-        map.current.on('dragend', (geocoder) => {
-            console.log(geocoder);
-          });
-
-
-
-        //
-        map.current.on('click', (e) => {
-            //const lngLatt = JSON.stringify(e.lngLat.wrap())
-            setLatitude(e.lngLat.lat);
-            setLongitude(e.lngLat.lng);
-        })
-
+        );
+        
+        //Get address on search Result
         geocoder.on('result', (e) => {
             console.log(e);
-        })
+            map.current.getSource('single-point').setData(e.result.geometry);
+        });
         
-        
-        
-    }, [url])
 
-    const handleClick = () => {
-        console.log(latitude,longitude);
         
+        //Get Latitude and Longitude on Click and add draggable marker
+        map.current.on('click', (e) => {
+            setLatitude(e.lngLat.lat);
+            setLongitude(e.lngLat.lng);
+            
+            if(!pickUp) {
+                addMarker(e);
+            }
+        });
+        
+        
+    }, [url,pickUp])
+
+    //send address on click
+    const handleClick = () => {
         axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?limit=1&access_token=pk.eyJ1IjoicGluZmxhZyIsImEiOiJja3ZpM3JqemkwMXdrMnZtaHBjNDVkOW5nIn0.s-_0Qw7og1cw0tsubdH8kQ`)
         .then((res) => {
             console.log(res.data.features[0]);
         }).catch((err) => {
             console.log(err);
-        })
-        
-    }
+        });
+
+
+    };
     
     return (
         <MAPCOMPONENT>
