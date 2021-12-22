@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import logo from '../assets/logo_pinflag.png';
 import delivery_icon from '../assets/delivery-icon.svg';
@@ -53,6 +53,7 @@ const Menu = ({
 export default Menu;
 
 const MENU = styled.div`
+
   .landing-container {
     width: 80%;
     height: 100%;

@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import styled from 'styled-components';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
+import axios from 'axios';
 
 
 mapboxgl.accessToken = "pk.eyJ1IjoicGluZmxhZyIsImEiOiJja3ZpM3JqemkwMXdrMnZtaHBjNDVkOW5nIn0.s-_0Qw7og1cw0tsubdH8kQ";
@@ -19,10 +20,13 @@ const limitsBox = [
     -17.594722    //maxY
 ]
 
-const Map = ({url, isPickup}) => {
+const Map = ({url}) => {
 
     const mapContainer = useRef(null);
     const map = useRef(null);
+    const [longitude, setLongitude] = useState(null);
+    const [latitude, setLatitude] = useState(null);
+
 
     useEffect(() => {
         //Initialize Map
@@ -34,6 +38,10 @@ const Map = ({url, isPickup}) => {
             zoom: 13,
         });
 
+
+        //Disable Map rotation
+        map.current.dragRotate.disable();
+
         //Geolocate User
         const geolocate = new mapboxgl.GeolocateControl({
             positionOptions: {
@@ -42,7 +50,8 @@ const Map = ({url, isPickup}) => {
                 showAccuracyCircle: false,
                 fitBoundsOptions: {
                     maxZoom: 15,
-                }
+                },
+                showUserLocation: false,
         });
 
         map.current.addControl(geolocate);
@@ -51,11 +60,6 @@ const Map = ({url, isPickup}) => {
         map.current.on('load', () => {
             geolocate.trigger();
         });
-
-        geolocate.on('geolocate', (event) => {
-            const features = map.current.queryRenderedFeatures(event.point);
-            console.log(features);
-        })
         
 
         //Search User Direction
@@ -63,35 +67,64 @@ const Map = ({url, isPickup}) => {
             accessToken: mapboxgl.accessToken,
             mapboxgl,
             bbox: limitsBox,
-            placeholder: "Buscar Direccion"
+            placeholder: "Ingresa tu direccion",
+            marker: {
+                color: '#11CC2C',
+                draggable: true,
+            }
         })
-        //Add Searchbar
+        //Add Searchbar on Map
         map.current.addControl(
             geocoder,
-            "top-left"
+            "top-left",
         )
 
-        map.current.on('click', (event) => {
-            const features = map.current.queryRenderedFeatures(event.point);
+        map.current.on('dragend', (geocoder) => {
+            console.log(geocoder);
+          });
 
-            console.log(event.target);
-            
-            // Centers map on point
-            map.current.easeTo({
-                center: features[0].geometry.coordinates,
-                duration: 1000,
-                zoom: 16,
-            })
+
+
+        //
+        map.current.on('click', (e) => {
+            //const lngLatt = JSON.stringify(e.lngLat.wrap())
+            setLatitude(e.lngLat.lat);
+            setLongitude(e.lngLat.lng);
         })
 
+        geocoder.on('result', (e) => {
+            console.log(e);
+        })
         
+        
+        
+    }, [url])
 
-    }, [])
-
+    const handleClick = () => {
+        console.log(latitude,longitude);
+        
+        axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?limit=1&access_token=pk.eyJ1IjoicGluZmxhZyIsImEiOiJja3ZpM3JqemkwMXdrMnZtaHBjNDVkOW5nIn0.s-_0Qw7og1cw0tsubdH8kQ`)
+        .then((res) => {
+            console.log(res.data.features[0]);
+        }).catch((err) => {
+            console.log(err);
+        })
+        
+    }
+    
     return (
+        <MAPCOMPONENT>
+        <div className="div">
+            {   latitude ?
+                <button onClick={handleClick}>Confirmar direccion</button>
+                :
+                <></>
+            }
+        </div>
         <MAP>
             <div ref={mapContainer} className="map"/>
         </MAP>
+        </MAPCOMPONENT>
     )
 }
 
@@ -106,4 +139,12 @@ const MAP = styled.div`
         width: 100%;
         height: 100%;
     }
+`
+
+const MAPCOMPONENT = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
 `

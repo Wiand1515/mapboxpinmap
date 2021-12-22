@@ -1,4 +1,5 @@
 import { useState } from "react";
+import styled from "styled-components";
 import Map from "./components/Map";
 import Menu from "./components/Menu";
 
@@ -13,7 +14,7 @@ const App = () => {
   }
 
   return (
-    <>
+    <APP>
       {isPickup === undefined ?
         <Menu isPickup={setIsPickup}/> 
         :
@@ -30,8 +31,15 @@ const App = () => {
         </>
       }
   
-    </>
+    </APP>
   );
 }
 
 export default App;
+
+const APP = styled.div`
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`
