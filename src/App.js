@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react/cjs/react.development";
 import styled from "styled-components";
+import AddressSave from "./components/AddressSave";
 import Map from "./components/Map";
 import Menu from "./components/Menu";
 import { WAREHOUSE_URL } from "./constant";
@@ -37,8 +38,9 @@ const App = () => {
   }, [selectedWarehouse,warehouse])
 
   return (
-    <APP>
-      {isPickup === undefined ?
+    <APP> 
+      <AddressSave/>
+      {/* {isPickup === undefined ?
         <Menu isPickup={setIsPickup} pickUp={isPickup}/> 
         :
         isPickup 
@@ -64,7 +66,7 @@ const App = () => {
         isAvailable={isAvailable}
         />
         </>
-      }
+      } */}
   
     </APP>
   );

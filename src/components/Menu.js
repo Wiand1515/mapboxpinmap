@@ -21,106 +21,122 @@ const Menu = ({
 
 
   return (
-    <MENU>
-      <div className="landing-container col">
-        <div className="logo-container">
-          <img alt="logo" src={logo} className="landing-logo" />
-        </div>
-        <span className="landing-msg">Elige como recibir tu pedido</span>
-        <div className="row btn-container">
-          <div className="btn-text-wrapper">
-            <div className="btn-landing" onClick={deliveryClick}>
-              <img alt="delivery-icon" src={delivery_icon} className="icon" />
-              <span className="btn-text">Despacho a domicilio</span>
-            </div>
-            <div className="description">
-              <span>Recibes tu pedido en la dirección que quieras</span>
-            </div>
+    <SelectMenu>
+        <div className="container">
+          <div className="header">
+            <img src={logo} alt="brand-pinflag-logo" />
           </div>
-          <div className="btn-text-wrapper">
-            <div className="btn-landing" onClick={pickupClick}>
-              <img alt="pickup-icon" src={pickup_icon} className="icon" />
-              <span className="btn-text">Pick up</span>
-            </div>
-            <div className="description">
-              <span>Retiras tu pedido en un punto Pinflag</span>
-            </div>
+          <div className="body">
+            <span className="text-title">Elige como recibir</span>
+            <span className="text-subtitle">tu compra.</span>
+          </div>
+          <div className="footer">
+            <button className="btn btn-top" onClick={deliveryClick}>
+              <img src={delivery_icon} alt="Delivery Icon" />
+              <span>
+                Despacho a domicilio
+              </span>
+            </button>
+            <button className="btn btn-bottom" onClick={pickupClick}>
+              <img src={pickup_icon} alt="Pickup Icon" />
+              Retiro en punto
+            </button>
+            <span className="sub-title-button-col">*Retiras tu pedido en el lugar que más te acomode.</span>
           </div>
         </div>
-      </div>
-    </MENU>
+    </SelectMenu>
   );
 };
 
 export default Menu;
 
-const MENU = styled.div`
-
-  .landing-container {
-    width: 80%;
-    height: 100%;
-    margin: 0 auto;
-    text-align: center;
-    font-size: 1.2rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .logo-container {
-    width: 50%;
-    margin: 1em auto 0em auto;
-  }
-
-  .landing-logo {
-    max-height: 2.5rem;
-  }
-
-  .btn-container {
-    gap: 3rem;
-    margin: 0 auto;
-    padding: 1em;
-    height: 100%;
-    display: flex;
-  }
-
-  .btn-landing {
-    background-color: white;
-    border-radius: 30px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
-    padding: 1em;
-    height: 50%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 0.5rem;
-  }
-
-  .btn-text-wrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    box-sizing: border-box;
-    flex: 1 1 1;
+const SelectMenu = styled.div`
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Montserrat', sans-serif;
+    }
+    
     width: 100%;
-  }
+    height: 100%;
+    
+    .container {
+      width: 95%;
+      margin: 0 auto;
+    }
+    .header img{
+      width: 8rem;
+      margin: 2rem;
+    }
 
-  .icon {
-    width: 3rem;
-    padding: 0.2rem;
-    height: 3rem;
-    margin-bottom: 1em;
-    filter: contrast(50%);
-  }
+    .body{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 2rem;
 
-  .landing-msg,
-  .btn-text {
-    font-weight: bold;
-  }
-`;
+    }
+
+    .text-title{
+      color: #33cccc;
+      font-size: 1.5rem;
+      font-weight:bold;
+
+    }
+
+    .text-subtitle{
+      color: #8497A5;
+      font-size: 1.5rem;
+      font-weight: regular;
+    }
+    .footer{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+
+    .footer button {
+      width: 60%;
+      padding: 1.1rem;
+      border-radius: 3rem;
+      border: none;
+      background-color: white;
+    }
+
+    .btn {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      font-weight: regular;
+      font-size: 1.1rem;
+      color: #8497A5;
+      background-color: white;
+      cursor: pointer;
+      box-shadow: rgba(99, 99, 99, 0.4) 0px 7px 29px 0px;
+      
+    }
+
+    .btn img{
+      width: 45px;
+      height: 45px;
+      margin-left: 2rem;
+      margin-right: 2rem;
+    }
+    .btn-top {
+      margin-top: 3rem;
+      margin-bottom: 3rem;
+    }
+
+
+    .sub-title-button-col {
+      color: #8497A5;
+      font-size: 0.8rem;
+      margin-top: 0.4rem;
+      margin-bottom: 0.8rem;
+    }
+
+`
