@@ -22,7 +22,7 @@ const App = () => {
         ?
         <>
         <button onClick={handleClick}>ToogleMap</button>
-        <Map url={pickUpUrl} isPickup={setIsPickup} pickUp={isPickup}/>
+        <Map url={pickUpUrl} isPickup={setIsPickup} />
         </>
         :
         <>
