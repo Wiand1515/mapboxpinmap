@@ -11,10 +11,12 @@ const Menu = ({
 
     const deliveryClick = () => {
         isPickup(false)
+        console.log(isPickup)
     }
 
     const pickupClick = () => {
         isPickup(true)
+        console.log(isPickup)
     }
 
 

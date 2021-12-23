@@ -21,8 +21,16 @@ const limitsBox = [
     -17.594722    //maxY
 ]
 
-const Map = ({url, pickUp}) => {
 
+const Map = ({
+    url,
+    pickUp,
+    setter,
+    isAvailable
+    }) => {
+    
+    const [pickUpName, setPickUpName] = useState("Pinflag");
+    
     //Ref to map items
     const mapContainer = useRef(null);
     const map = useRef(null);
@@ -126,24 +134,48 @@ const Map = ({url, pickUp}) => {
                 marker.setLngLat(e.result.geometry.coordinates).addTo(map.current);
                 marker.on('dragend', () => {
                     const lngLat = marker.getLngLat();
-                    console.log(lngLat);
+                    axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lngLat.lng},${lngLat.lat}.json?limit=1&access_token=pk.eyJ1IjoicGluZmxhZyIsImEiOiJja3ZpM3JqemkwMXdrMnZtaHBjNDVkOW5nIn0.s-_0Qw7og1cw0tsubdH8kQ`)
+                    .then((res) => {
+                        geocoder.setInput(res.data.features[0].place_name);
+                        geocoder.setLimit(1)
+                    }).catch((err) => {
+                        console.log(err);
+                    });
+                    
                 })
             }
         });
         
+        if(pickUp) {
+            map.current.on('click', (e) => {
+                // If the user clicked on one of your markers, get its information.
+                const features = map.current.queryRenderedFeatures(e.point, {
+                layers: ['newest'] // replace with your layer name
+            });
+
+            if (!features.length) {
+                setter(null);
+                geocoder.clear()
+                setPickUpName('Pinflag');
+                return;
+            }
+
+            const feature = features[0];
+            setter(feature.properties.id);
+            setPickUpName(feature.properties.title);
+
+            })
+        }
 
         
         //Get Latitude and Longitude on Click and add draggable marker
         map.current.on('click', (e) => {
-             // If the user clicked on one of your markers, get its information.
-             const features = map.current.queryRenderedFeatures(e.point, {
-                layers: ['newest'] // replace with your layer name
-            });
+          
 
-            const feature = features[0];
-            console.log(feature);
 
-            console.log(e.lngLat)
+
+            
+
 
             map.current.flyTo({
                 center: e.lngLat,
@@ -186,7 +218,7 @@ const Map = ({url, pickUp}) => {
         });
         
         
-    }, [url,pickUp])
+    }, [url,pickUp,setter])
 
     //send address on click
     const handleClick = () => {
@@ -207,7 +239,7 @@ const Map = ({url, pickUp}) => {
         <>
         <MapHeader>
             <div className="header">
-                    <h1 className='title-text'>Punto: Pick up blue express Carmenci </h1>
+                    <h1 className='title-text'>{pickUpName}</h1>
                     <img src={PinMapLogo} alt="PinflagLogo" />
  
             </div>
@@ -224,7 +256,7 @@ const Map = ({url, pickUp}) => {
                 }
             </div>
             <div className="button-row container">
-                <button>Pickup</button>
+                <button onClick={handleClick}>Pickup</button>
                 <button className='delivery'>Delivery</button>
             </div>
             <div className="input-row container">
@@ -246,8 +278,9 @@ const MapHeader = styled.div`
         margin:0;
         padding: 0;
         box-sizing: border-box;
-        background-color: transparent;
     }
+    background-color: transparent;
+    border: 1px solid black;
     width: 600px;
     .container {
         width: 90%;
@@ -257,15 +290,16 @@ const MapHeader = styled.div`
     .header{
         display: flex;
         align-items:center;
-        justify-content: flex-start;
+        justify-content: space-between;
     }
     .header h1{
-        border: 1px solid black;
+        margin-left: 0.2rem;
+        font-size: 1.7rem;
     }
     .header img {
         width: 5rem;
-        border: 1px solid black;
         border-radius: 2.5rem;
+        margin-right: 0.4rem;
     }
     .instructions{
         display: flex;
@@ -305,7 +339,6 @@ const MapHeader = styled.div`
 const MapComponent = styled.div`
     width: 600px;
     height: 400px;
-    border: 1px solid black;
     border-radius: 1rem;
 
     .map{
