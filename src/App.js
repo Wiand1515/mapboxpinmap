@@ -40,7 +40,8 @@ const App = () => {
   return (
     <APP> 
       <AddressSave/>
-      {/* {isPickup === undefined ?
+
+      {isPickup === undefined ?
         <Menu isPickup={setIsPickup} pickUp={isPickup}/> 
         :
         isPickup 
@@ -66,7 +67,7 @@ const App = () => {
         isAvailable={isAvailable}
         />
         </>
-      } */}
+      }
   
     </APP>
   );
