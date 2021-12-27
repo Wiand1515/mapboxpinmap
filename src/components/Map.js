@@ -37,7 +37,6 @@ const Map = ({ url, pickUp, setter, title, subtitle, isPickup }) => {
   //send address on click
   const handleClick = () => {
     setSaveAddressData(true);
-    console.log(addressData);
 
     window.parent.postMessage(
       {
@@ -126,7 +125,6 @@ const Map = ({ url, pickUp, setter, title, subtitle, isPickup }) => {
     //Only available on delivery
     if (!pickUp) {
       geocoder.on("result", (event) => {
-        console.log(event.result);
         marker.setLngLat(event.result.geometry.coordinates).addTo(map.current);
         setAddressData({
           address: event.result.text,
@@ -144,7 +142,6 @@ const Map = ({ url, pickUp, setter, title, subtitle, isPickup }) => {
             .then((res) => {
               geocoder.setInput(res.data.features[0].place_name);
               geocoder.setLimit(1);
-              console.log(res.data.features[0]);
               setAddressData({
                 address: res.data.features[0].text,
                 number: res.data.features[0].address,
@@ -169,7 +166,6 @@ const Map = ({ url, pickUp, setter, title, subtitle, isPickup }) => {
             `https://api.mapbox.com/geocoding/v5/mapbox.places/${event.lngLat.lng},${event.lngLat.lat}.json?limit=1&access_token=pk.eyJ1IjoicGluZmxhZyIsImEiOiJja3ZpM3JqemkwMXdrMnZtaHBjNDVkOW5nIn0.s-_0Qw7og1cw0tsubdH8kQ`
           )
           .then((res) => {
-            console.log(res.data.features[0].place_name);
             geocoder.setInput(res.data.features[0].place_name);
             geocoder.setLimit(1);
             setAddressData({
@@ -192,7 +188,6 @@ const Map = ({ url, pickUp, setter, title, subtitle, isPickup }) => {
               `https://api.mapbox.com/geocoding/v5/mapbox.places/${lngLat.lng},${lngLat.lat}.json?limit=1&access_token=pk.eyJ1IjoicGluZmxhZyIsImEiOiJja3ZpM3JqemkwMXdrMnZtaHBjNDVkOW5nIn0.s-_0Qw7og1cw0tsubdH8kQ`
             )
             .then((res) => {
-              console.log(res.data.features[0].place_name);
               geocoder.setInput(res.data.features[0].place_name);
               geocoder.setLimit(1);
               setAddressData({

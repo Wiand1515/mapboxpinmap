@@ -8,7 +8,6 @@ import { AddressSuccess } from "../styles/AddressSave.style";
 
 const AddressSave = ({isPickup,addressData,pickUp}) => {
 
-  console.log(addressData);
 
   return (
     <AddressSuccess>

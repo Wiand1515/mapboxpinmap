@@ -24,9 +24,7 @@ const App = () => {
       .get(WAREHOUSE_URL(selectedWarehouse), getConfig())
       .then((res) => {
         setWarehouse(res.data);
-        console.log(res.data);
         setIsAvailable(checkAvailability(res.data));
-        console.log(res);
       })
       .catch((err) => {
         console.log(err);

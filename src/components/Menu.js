@@ -7,12 +7,10 @@ import { SelectMenu } from "../styles/Menu.style";
 const Menu = ({ isPickup }) => {
   const deliveryClick = () => {
     isPickup(false);
-    console.log(isPickup);
   };
 
   const pickupClick = () => {
     isPickup(true);
-    console.log(isPickup);
   };
 
   return (
